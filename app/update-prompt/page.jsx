@@ -1,20 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Form from "@components/Form";
+
+const UpdatePromptPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <p>Loading...</p>
+        </>
+      }
+    >
+      <EditPrompt />
+    </Suspense>
+  );
+};
+
+export default UpdatePromptPage;
 
 const EditPrompt = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const promptId = searchParams.get("id");
 
-  const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
     prompt: "",
     tag: "",
   });
+  const [submitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const getPromptDetails = async () => {
@@ -32,7 +48,7 @@ const EditPrompt = () => {
 
   const updatePrompt = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
+    setIsSubmitting(true);
 
     if (!promptId) return alert("Prompt ID not found");
 
@@ -51,7 +67,7 @@ const EditPrompt = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -66,4 +82,4 @@ const EditPrompt = () => {
   );
 };
 
-export default EditPrompt;
+// export default EditPrompt;
